@@ -1,4 +1,4 @@
-// Te_MLP.cpp : �w�q�D���x���ε{�����i�J�I�C
+// Te_MLP.cpp 
 //
 
 #include "stdafx.h"
