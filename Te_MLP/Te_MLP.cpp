@@ -18,8 +18,7 @@ using namespace std;
 
 #define   Input_file   "in.dat"
 #define   Desired_output_file  "out.dat"
-/**********************************************************/
-#define   Desired_output_file_normolization "out_normolization.dat"
+
 /**********************************************************/
 #define   Hid_Out_weight "w.dat"
 #define   In_Hid_weight "v.dat"
@@ -33,10 +32,10 @@ using namespace std;
 #define  _dat_num    500
 
 
-void READ_W(FILE *ft);
-void READ_V(FILE *ft);
-void READ_input_data(FILE *fx);
-void READ_output_Normolization_data(FILE *fy);
+void READ_W(FILE* ft);
+void READ_V(FILE* ft);
+void READ_input_data(FILE* fx);
+void READ_output_Normolization_data(FILE* fy);
 void TEST_SAVE(void);
 /**********************************************************/
 void read_output_data();
@@ -44,9 +43,9 @@ void Renormalization_acty();
 float ReverseNormalization(float NormolizationNumber);
 /**********************************************************/
 
-float _x[_dat_num+1][_in_varl+1],_d[_dat_num+1][_out_varl+1]  ;
-float _y[_out_varl+1] ;
-float _v[_node+1][_in_varl+1], _w[_out_varl+1][_node+1] ; 
+float _x[_dat_num + 1][_in_varl + 1], _d[_dat_num + 1][_out_varl + 1];
+float _y[_out_varl + 1];
+float _v[_node + 1][_in_varl + 1], _w[_out_varl + 1][_node + 1];
 /**********************************************************/
 float _outMax;
 float _outMin;
@@ -56,45 +55,52 @@ float _difference;
 int _tmain(int argc, _TCHAR* argv[])
 {
     /**********************************************************/
-     read_output_data();
+    read_output_data();
     /**********************************************************/
-	 FILE *stream ;
- 
-      if ( fopen_s(&stream, In_Hid_weight,"r") !=0) 
-		  { printf("open error 1 ");
-	       exit(1); }
-      READ_V(stream);
-      fclose(stream) ;
+    FILE* stream;
 
-     if ( fopen_s(&stream,Hid_Out_weight,"r") !=0) 
-		  { printf("open error 2 ");
-	       exit(1); }
-      READ_W(stream);
-      fclose(stream) ;
+    if (fopen_s(&stream, In_Hid_weight, "r") != 0)
+    {
+        printf("open error 1 ");
+        exit(1);
+    }
+    READ_V(stream);
+    fclose(stream);
 
-      if ( fopen_s(&stream,Input_file,"r") !=0) 
-	       { printf("open error 3 ");
-	       exit(1); }
-	  READ_input_data(stream);
-      fclose(stream) ;
+    if (fopen_s(&stream, Hid_Out_weight, "r") != 0)
+    {
+        printf("open error 2 ");
+        exit(1);
+    }
+    READ_W(stream);
+    fclose(stream);
 
-	 if ( fopen_s(&stream, Desired_output_file_normolization,"r") !=0)
-	       { printf("open error 4 ");
-	       exit(1); }
-     READ_output_Normolization_data(stream);
-      fclose(stream) ; 
-	  	  
-	  TEST_SAVE();
-      Renormalization_acty();
+    if (fopen_s(&stream, Input_file, "r") != 0)
+    {
+        printf("open error 3 ");
+        exit(1);
+    }
+    READ_input_data(stream);
+    fclose(stream);
 
-	  _getch();    
-      return 0;
+    if (fopen_s(&stream, Desired_output_file, "r") != 0)
+    {
+        printf("open error 4 ");
+        exit(1);
+    }
+    READ_output_Normolization_data(stream);
+    fclose(stream);
+
+    TEST_SAVE();
+    Renormalization_acty();
+
+    _getch();
+    return 0;
 }
 
 /**********************************************************/
-void read_output_data(){
+void read_output_data() {
     std::ifstream fileRead_OutPut_Data(Desired_output_file);
-    std::ofstream fileWrite_OutPut_Normolization_Data(Desired_output_file_normolization);
     float number, normolizationNumber;
     std::vector<float> numbers;
     if (!fileRead_OutPut_Data.is_open()) {
@@ -113,91 +119,100 @@ void read_output_data(){
 }
 /**********************************************************/
 
-void READ_W(FILE *ft)
-{  int  j,q ;
-  
-for(j=0;j< _out_varl;j++)
-{  for(q=0;q<= _node;q++)
-    fscanf_s(ft,"%f ",&_w[j][q]) ;
-}   
-}
-
-void READ_V(FILE *ft)
-{ int  i, q ;
-
-for(q=0;q<_node;q++)
-{ 	for(i=0;i<= _in_varl;i++)
-	  fscanf_s(ft,"%f ",&_v[q][i]);	 
-}
-}
-
-void READ_input_data(FILE *fx)
-{ int i,j;
-
- for(i=0; i< _dat_num; i++)
-  {   for(j=0;j< _in_varl ;j++)
-       fscanf_s(fx,"%f",&_x[i][j]);  	
-	_x[i][_in_varl]= -1 ; // for bias
- }
-}
-
-
-void READ_output_Normolization_data(FILE *fy)
+void READ_W(FILE* ft)
 {
-   int i,j;
+    int  j, q;
 
-   for (i=0;i<_dat_num;i++)
-    for(j=0;j< _out_varl;j++)
-        fscanf_s(fy,"%f ",&_d[i][j]);  
- 
+    for (j = 0; j < _out_varl; j++)
+    {
+        for (q = 0; q <= _node; q++)
+            fscanf_s(ft, "%f ", &_w[j][q]);
+    }
+}
+
+void READ_V(FILE* ft)
+{
+    int  i, q;
+
+    for (q = 0; q < _node; q++)
+    {
+        for (i = 0; i <= _in_varl; i++)
+            fscanf_s(ft, "%f ", &_v[q][i]);
+    }
+}
+
+void READ_input_data(FILE* fx)
+{
+    int i, j;
+
+    for (i = 0; i < _dat_num; i++)
+    {
+        for (j = 0; j < _in_varl; j++)
+            fscanf_s(fx, "%f", &_x[i][j]);
+        _x[i][_in_varl] = -1; // for bias
+    }
+}
+
+
+void READ_output_Normolization_data(FILE* fy)
+{
+    int i, j;
+
+    for (i = 0; i < _dat_num; i++)
+        for (j = 0; j < _out_varl; j++)
+            fscanf_s(fy, "%f ", &_d[i][j]);
+
 }
 
 
 void TEST_SAVE(void)
 
-{  int i,j,q,num ;
-   FILE *stream ;
-   float h[_node+1],Y,H,error[_out_varl+1],difference[_out_varl+1]; 
-   FILE  *fout  ;
+{
+    int i, j, q, num;
+    FILE* stream;
+    float h[_node + 1], Y, H, error[_out_varl + 1], difference[_out_varl + 1];
+    FILE* fout;
 
-   printf("\n   testing : ********************************** \n");
-       
-  if( fopen_s(&fout, Test_output_file,"w") != 0 ) exit(1) ;
+    printf("\n   testing : ********************************** \n");
 
-   for(j=0;j< _out_varl ;j++)
-	   error [j]=0 ;
+    if (fopen_s(&fout, Test_output_file, "w") != 0) exit(1);
 
-  for(num=0;num< _dat_num ;num++)
-   {
-    for(q=0;q< _node ;q++)
-    { H = 0; 
-      for(i=0;i<= _in_varl ;i++)
-	   H = H + _v[q][i]*_x[num][i] ;
-      h[q] = a(H) ;
-    }
-	h[_node]=-1 ;  // for bias  
+    for (j = 0; j < _out_varl; j++)
+        error[j] = 0;
 
-   for(j=0;j< _out_varl ;j++)
-    {  Y = 0 ;
-       for(q=0;q<= _node ;q++)
-	   Y = Y  + _w[j][q]*h[q] ;
-       _y[j] = a(Y) ;
+    for (num = 0; num < _dat_num; num++)
+    {
+        for (q = 0; q < _node; q++)
+        {
+            H = 0;
+            for (i = 0; i <= _in_varl; i++)
+                H = H + _v[q][i] * _x[num][i];
+            h[q] = a(H);
+        }
+        h[_node] = -1;  // for bias  
 
-       fprintf(fout,"%f  ",_y[j] );
+        for (j = 0; j < _out_varl; j++)
+        {
+            Y = 0;
+            for (q = 0; q <= _node; q++)
+                Y = Y + _w[j][q] * h[q];
+            _y[j] = a(Y);
 
-	    difference [j] = _d[num][j] - _y[j]  ;
-       error [j] = error [j] + difference [j]*difference [j]  ;
-    }
+            fprintf(fout, "%f  ", _y[j]);
 
-      fprintf(fout," \n ");
+            difference[j] = _d[num][j] - _y[j];
+            error[j] = error[j] + difference[j] * difference[j];
+        }
 
-   }/* end for num */
+        fprintf(fout, " \n ");
 
-   printf("\n\n ++++ Final result: ");
-	   for(j=0;j< _out_varl ;j++)
-	    printf(" output %d is --- %f ", j+1, sqrt(error[j]/_dat_num));
+    }/* end for num */
 
-   fclose(fout) ;
+    printf("\n\n ++++ Final result: ");
+    for (j = 0; j < _out_varl; j++)
+        printf(" output %d is --- %f ", j + 1, sqrt(error[j] / _dat_num));
+
+    fclose(fout);
 
 }
 void Renormalization_acty() {
@@ -226,5 +241,4 @@ float ReverseNormalization(float NormolizationNumber) {
     return NormolizationNumber;
 }
 /*++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
-
 
