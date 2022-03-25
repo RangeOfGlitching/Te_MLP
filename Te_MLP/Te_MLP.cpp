@@ -28,19 +28,19 @@ using namespace std;
 #define a(f)   1 / (1 + exp(-f))
 #define _in_varl   4
 #define _out_varl  1
-#define _node   10
+#define _node   20
 #define  _dat_num    500
 
 
 void READ_W(FILE* ft);
 void READ_V(FILE* ft);
 void READ_input_data(FILE* fx);
-void READ_output_Normolization_data(FILE* fy);
+void READ_output(FILE* fy);
 void TEST_SAVE(void);
 /**********************************************************/
 void read_output_data();
-void Renormalization_acty();
-float ReverseNormalization(float NormolizationNumber);
+//void Renormalization_acty();
+//float ReverseNormalization(float NormolizationNumber);
 /**********************************************************/
 
 float _x[_dat_num + 1][_in_varl + 1], _d[_dat_num + 1][_out_varl + 1];
@@ -88,11 +88,11 @@ int _tmain(int argc, _TCHAR* argv[])
         printf("open error 4 ");
         exit(1);
     }
-    READ_output_Normolization_data(stream);
+    READ_output(stream);
     fclose(stream);
 
     TEST_SAVE();
-    Renormalization_acty();
+    //Renormalization_acty();
 
     _getch();
     return 0;
@@ -154,7 +154,7 @@ void READ_input_data(FILE* fx)
 }
 
 
-void READ_output_Normolization_data(FILE* fy)
+void READ_output(FILE* fy)
 {
     int i, j;
 
@@ -197,7 +197,9 @@ void TEST_SAVE(void)
             for (q = 0; q <= _node; q++)
                 Y = Y + _w[j][q] * h[q];
             _y[j] = a(Y);
-
+            /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+            _y[j] = _y[j] * _difference + _outMin;
+            /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
             fprintf(fout, "%f  ", _y[j]);
 
             difference[j] = _d[num][j] - _y[j];
@@ -209,36 +211,37 @@ void TEST_SAVE(void)
     }/* end for num */
 
     printf("\n\n ++++ Final result: ");
+    std::cout << _out_varl << std::endl;
     for (j = 0; j < _out_varl; j++)
-        printf(" output %d is --- %f ", j + 1, sqrt(error[j] / _dat_num));
+        printf(" output %d is --- %f  ", j , sqrt(error[j] / _dat_num));
 
     fclose(fout);
 
 }
-void Renormalization_acty() {
-    float number;
-    std::ifstream file_Read_Actual_output_file(Test_output_file);
-    std::vector<float> renormolization;
-    if (!file_Read_Actual_output_file.is_open()) {
-        std::cout << "fileOpenfiled" << endl;
-        system("pause<0");
-    }
-    while (file_Read_Actual_output_file >> number) {
-        renormolization.push_back(number);
-    }
-    file_Read_Actual_output_file.close();
-
-    std::ofstream file_wite_Actual_output_file(Test_output_file);
-    for (float NormolizationNumber : renormolization) {
-        number = ReverseNormalization(NormolizationNumber);
-        file_wite_Actual_output_file << "    " << number << std::endl;
-    }
-}
+//void Renormalization_acty() {
+//    float number;
+//    std::ifstream file_Read_Actual_output_file(Test_output_file);
+//    std::vector<float> renormolization;
+//    if (!file_Read_Actual_output_file.is_open()) {
+//        std::cout << "fileOpenfiled" << endl;
+//        system("pause<0");
+//    }
+//    while (file_Read_Actual_output_file >> number) {
+//        renormolization.push_back(number);
+//    }
+//    file_Read_Actual_output_file.close();
+//
+//    std::ofstream file_wite_Actual_output_file(Test_output_file);
+//    for (float NormolizationNumber : renormolization) {
+//        number = ReverseNormalization(NormolizationNumber);
+//        file_wite_Actual_output_file << "    " << number << std::endl;
+//    }
+//}
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 /*++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
-float ReverseNormalization(float NormolizationNumber) {
-    NormolizationNumber = NormolizationNumber * _difference + _outMin;
-    return NormolizationNumber;
-}
+//float ReverseNormalization(float NormolizationNumber) {
+//    NormolizationNumber = NormolizationNumber * _difference + _outMin;
+//    return NormolizationNumber;
+//}
 /*++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 
